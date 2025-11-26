@@ -1,0 +1,36 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: promotions-service
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/Promotions}
+      database: Promotions
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+# Configuración COMPLETA de Swagger/OpenAPI
+springdoc:
+  api-docs:
+    path: /api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    operations-sorter: alpha
+    tags-sorter: alpha
+    doc-expansion: none
+    display-request-duration: true
+    filter: true
+  show-actuator: false
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  cache:
+    disabled: true
+  info:
+    title: Promotions Service API
+    version: 1.0.0
+    description: API para gestión de promociones en ECIEXPRESS
