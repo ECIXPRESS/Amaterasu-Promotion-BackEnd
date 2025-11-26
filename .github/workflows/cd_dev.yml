@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - develop
-      - feature/configuracionPipelines_CI/CD-70   
+      # - feature/configuracionPipelines_CI/CD-70   
 
 jobs:
   build-and-deploy:
