@@ -1,6 +1,8 @@
 package ECIEXPRESS.Amaterasu_Pagos.Promotion._BackEnd.Amaterasu_Pagos.Promotion._BackEnd.Infrastructure.Clients.Order;
 
 import ECIEXPRESS.Amaterasu_Pagos.Promotion._BackEnd.Amaterasu_Pagos.Promotion._BackEnd.Domain.Port.OrderProvider;
+import ECIEXPRESS.Amaterasu_Pagos.Promotion._BackEnd.Amaterasu_Pagos.Promotion._BackEnd.Exception.ExternalServiceException;
+import ECIEXPRESS.Amaterasu_Pagos.Promotion._BackEnd.Amaterasu_Pagos.Promotion._BackEnd.Exception.OrderNotFoundException;
 import ECIEXPRESS.Amaterasu_Pagos.Promotion._BackEnd.Amaterasu_Pagos.Promotion._BackEnd.Infrastructure.Clients.Order.Dto.OrderResponses.OrderItemResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,19 +48,15 @@ public class OrderProviderAdapter implements OrderProvider {
 
             if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null) {
                 log.error("Failed to get order items for order: {}. Status: {}", orderId, response.getStatusCode());
-                throw new RuntimeException("Failed to get order items for order: " + orderId);
+                throw new ExternalServiceException("Failed to get order items for order: " + orderId);
             }
 
-            log.info("Successfully retrieved {} items for order: {}", response.getBody().size(), orderId);
             return response.getBody();
 
         } catch (HttpClientErrorException.NotFound e) {
-            log.error("Order not found: {}", orderId);
-            throw new RuntimeException("Order not found: " + orderId, e);
-
+            throw new OrderNotFoundException(orderId);
         } catch (Exception e) {
-            log.error("Error getting order items for order {}: {}", orderId, e.getMessage());
-            throw new RuntimeException("Error getting order items for order " + orderId + ": " + e.getMessage(), e);
+            throw new ExternalServiceException("Error getting order items for order " + orderId + ": " + e.getMessage(), e);
         }
     }
 
@@ -73,10 +71,7 @@ public class OrderProviderAdapter implements OrderProvider {
         String cleanBasePath = basePath.endsWith("/") ? basePath.substring(0, basePath.length() - 1) : basePath;
         String cleanPathTemplate = pathTemplate.startsWith("/") ? pathTemplate : "/" + pathTemplate;
 
-        return String.format("%s%s%s",
-                baseUrl,
-                cleanBasePath,
-                cleanPathTemplate);
+        return String.format("%s%s%s", baseUrl, cleanBasePath, cleanPathTemplate);
     }
 }
 
