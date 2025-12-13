@@ -1,18 +1,17 @@
 server:
-  port: 8080
+  port: 8084
 
 spring:
   application:
-    name: promotions-service
+    name: promotion-service
   data:
     mongodb:
-      uri: ${MONGODB_URI:mongodb://localhost:27017/Promotions}
+      uri: mongodb+srv://manuelguarnizog_db_user:slmEouXGl5LaTDbg@clustereciexpress.m7ljcsf.mongodb.net/?appName=ClusterECIEXPRESS
       database: Promotions
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
 
-# Configuración COMPLETA de Swagger/OpenAPI
 springdoc:
   api-docs:
     path: /api-docs
@@ -31,6 +30,35 @@ springdoc:
   cache:
     disabled: true
   info:
-    title: Promotions Service API
+    title: Promotion Service API
     version: 1.0.0
     description: API para gestión de promociones en ECIEXPRESS
+
+microservices:
+  order:
+    url: http://localhost:8089
+    base-path: /api/orders
+    timeout: 5000
+    retry:
+      max-attempts: 3
+      backoff-delay: 1000
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      orderService:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10000
+        permitted-number-of-calls-in-half-open-state: 3
+  retry:
+    instances:
+      orderService:
+        max-attempts: 3
+        wait-duration: 2s
+
+logging:
+  level:
+    com.eciexpress.promotion: DEBUG
+    org.springframework.data.mongodb: INFO
+    org.springdoc: DEBUG

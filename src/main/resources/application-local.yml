@@ -1,0 +1,8 @@
+spring:
+  data:
+    mongodb:
+      uri: "mongodb+srv://prueba:prueba1234@sirhadb.e43oxls.mongodb.net/?retryWrites=true&w=majority&appName=SIRHADB"
+      database: Promotions
+microservices:
+  qr-validator:
+    url: http://localhost:8089
