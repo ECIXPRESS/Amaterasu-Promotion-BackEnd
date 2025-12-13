@@ -10,10 +10,11 @@ import ECIEXPRESS.Amaterasu_Pagos.Promotion._BackEnd.Amaterasu_Pagos.Promotion._
 import java.util.List;
 
 public interface PromotionUseCases {
-    public List<GetPromotionResponse> getAllPromotions();
-    public GetPromotionResponse getPromotionById(String id);
-    public void createPromotion(CreatePromotionRequest request);
-    public UpdatePromotionResponse updatePromotion(UpdatePromotionRequest request);
-    public ApplyPromotionResponse applyPromotion(ApplyPromotionRequest request);
-    public void deletePromotion(String id);
+    List<GetPromotionResponse> getAllPromotions();
+    GetPromotionResponse getPromotionById(String id);
+    void createPromotion(CreatePromotionRequest request);
+    UpdatePromotionResponse updatePromotion(UpdatePromotionRequest request);
+    ApplyPromotionResponse applyPromotion(ApplyPromotionRequest request);
+    void deletePromotion(String id);
+    void checkActivePromotions();
 }

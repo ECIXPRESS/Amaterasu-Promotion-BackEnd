@@ -9,6 +9,8 @@ public interface PromotionRepositoryProvider {
     PromotionRepositoryResponse save(Promotion promotion);
     PromotionRepositoryResponse getPromotionById(String promotionId);
     List<PromotionRepositoryResponse> getPromotionsByProductId(String productId);
+    PromotionRepositoryResponse getActivePromotionByProductId(String productId);
+    List<PromotionRepositoryResponse> getActivePromotions();
     List<PromotionRepositoryResponse> getAll();
     void delete(Promotion promotion);
 }

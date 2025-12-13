@@ -6,7 +6,7 @@ import ECIEXPRESS.Amaterasu_Pagos.Promotion._BackEnd.Amaterasu_Pagos.Promotion._
 
 public class PromotionRepositoryMapper {
     public static PromotionRepositoryResponse DocumentToResponse(PromotionDocument promotionDocument){
-        return new PromotionRepositoryResponse(promotionDocument);
+        return promotionDocument == null ? null : new PromotionRepositoryResponse(promotionDocument);
     }
 
     public static PromotionDocument ReceiptToDocument(Promotion promotion) {

@@ -37,7 +37,7 @@ springdoc:
 microservices:
   order:
     url: http://localhost:8089
-    base-path: /api/v1/order
+    base-path: /api/orders
     timeout: 5000
     retry:
       max-attempts: 3

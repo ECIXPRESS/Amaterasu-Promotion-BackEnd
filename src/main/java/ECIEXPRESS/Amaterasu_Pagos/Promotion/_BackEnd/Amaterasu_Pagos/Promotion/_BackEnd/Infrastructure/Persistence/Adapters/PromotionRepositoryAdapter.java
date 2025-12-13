@@ -19,8 +19,8 @@ public class PromotionRepositoryAdapter implements PromotionRepositoryProvider {
 
     @Override
     public PromotionRepositoryResponse save(Promotion promotion) {
-        mongoPromotionRepository.save(PromotionRepositoryMapper.ReceiptToDocument(promotion));
-        return PromotionRepositoryMapper.DocumentToResponse(mongoPromotionRepository.findById(promotion.getPromotionId()).get());
+        PromotionDocument saved = mongoPromotionRepository.save(PromotionRepositoryMapper.ReceiptToDocument(promotion));
+        return PromotionRepositoryMapper.DocumentToResponse(saved);
     }
 
     @Override
@@ -44,6 +44,19 @@ public class PromotionRepositoryAdapter implements PromotionRepositoryProvider {
         return documents.stream()
                 .map(PromotionRepositoryMapper::DocumentToResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PromotionRepositoryResponse> getActivePromotions(){
+        List<PromotionDocument> documents = mongoPromotionRepository.getActivePromotions();
+        return documents.stream()
+                .map(PromotionRepositoryMapper::DocumentToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public PromotionRepositoryResponse getActivePromotionByProductId(String productId) {
+        return PromotionRepositoryMapper.DocumentToResponse(mongoPromotionRepository.findByProductIdAndIsActive(productId));
     }
 
     @Override

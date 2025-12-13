@@ -2,6 +2,8 @@ package ECIEXPRESS.Amaterasu_Pagos.Promotion._BackEnd.Amaterasu_Pagos.Promotion.
 
 import ECIEXPRESS.Amaterasu_Pagos.Promotion._BackEnd.Amaterasu_Pagos.Promotion._BackEnd.Infrastructure.Clients.Order.Dto.OrderResponses.OrderItemResponse;
 
+import java.util.List;
+
 public interface OrderProvider {
-    public OrderItemResponse getOrderById(String orderId);
+    public List<OrderItemResponse> getOrderItemsById(String orderId);
 }

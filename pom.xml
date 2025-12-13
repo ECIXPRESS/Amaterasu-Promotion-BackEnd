@@ -17,34 +17,23 @@
     <name>Amaterasu-Pagos-Promotion-BackEnd</name>
     <description>Microservicio para gestionar las promociones y descuentos de los usuarios en ECIEXPRESS</description>
 
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
-
     <properties>
         <java.version>17</java.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.release>17</maven.compiler.release>
 
-        <!-- JaCoCo Properties -->
+        <!-- JaCoCo -->
         <jacoco.version>0.8.13</jacoco.version>
-        <argLine>-Dnet.bytebuddy.experimental=true</argLine>
+        <!-- Defínela para que el IDE NO se queje (puede ir vacía) -->
+        <jacocoArgLine/>
+        <!-- Flags extra para forks (ByteBuddy/Mockito) -->
+        <bytebuddy.experimental.arg>-Dnet.bytebuddy.experimental=true</bytebuddy.experimental.arg>
 
-        <!-- Sonar Properties -->
+        <!-- Sonar -->
         <sonar.organization>ecixpress</sonar.organization>
-        <sonar.projectKey>ECIXPRESS_Amaterasu-Receipts-BackEnd</sonar.projectKey>
-        <sonar.projectName>Amaterasu-Receipts-BackEnd</sonar.projectName>
+        <sonar.projectKey>ECIXPRESS_Amaterasu-Pagos-Promotion-BackEnd</sonar.projectKey>
+        <sonar.projectName>Amaterasu-Pagos-Promotion-BackEnd</sonar.projectName>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
         <sonar.coverage.exclusions>
@@ -80,21 +69,22 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- Spring Boot Starters -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
+
+        <!-- Si planeas usar WebClient -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
 
-        <!-- MongoDB -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
@@ -129,7 +119,6 @@
             </exclusions>
         </dependency>
 
-        <!-- MockWebServer para mockear llamadas HTTP en tests -->
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>mockwebserver</artifactId>
@@ -137,7 +126,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- ByteBuddy para soporte de mocking -->
         <dependency>
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy</artifactId>
@@ -166,7 +154,6 @@
                 </configuration>
             </plugin>
 
-            <!-- Spring Boot Maven Plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -180,40 +167,48 @@
                 </configuration>
             </plugin>
 
-            <!-- JaCoCo Configuration - MOVED BEFORE SURFEFIRE -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
+
+                <!-- Si quieres que tus excludes sí apliquen de forma consistente, ponlos a nivel plugin -->
+                <configuration>
+                    <excludes>
+                        <exclude>lombok.*</exclude>
+                        <exclude>**/Config/**</exclude>
+                        <exclude>**/Dto/**</exclude>
+                        <exclude>**/Model/**</exclude>
+                        <exclude>**/Exception/**</exclude>
+                        <exclude>**/Utils/**</exclude>
+                        <exclude>**/Enums/**</exclude>
+                        <exclude>**/Mappers/**</exclude>
+                        <exclude>**/*Application*.class</exclude>
+                        <exclude>**/Entities/**</exclude>
+                        <exclude>**/Entity/**</exclude>
+                    </excludes>
+                </configuration>
+
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
+                        <configuration>
+                            <!-- Clave del fix -->
+                            <propertyName>jacocoArgLine</propertyName>
+                        </configuration>
                     </execution>
+
                     <execution>
                         <id>report</id>
                         <phase>verify</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
-                        <configuration>
-                            <excludes>
-                                <exclude>lombok.*</exclude>
-                                <exclude>**/Config/**</exclude>
-                                <exclude>**/Dto/**</exclude>
-                                <exclude>**/Model/**</exclude>
-                                <exclude>**/Exception/**</exclude>
-                                <exclude>**/Utils/**</exclude>
-                                <exclude>**/Enums/**</exclude>
-                                <exclude>**/Mappers/**</exclude>
-                                <exclude>**/ApplicationReceipts.class</exclude>
-                                <exclude>**/Entities/**</exclude>
-                                <exclude>**/Entity/**</exclude>
-                            </excludes>
-                        </configuration>
                     </execution>
+
                     <execution>
                         <id>jacoco-check</id>
                         <phase>verify</phase>
@@ -233,31 +228,17 @@
                                     </limits>
                                 </rule>
                             </rules>
-                            <excludes>
-                                <exclude>lombok.*</exclude>
-                                <exclude>**/Config/**</exclude>
-                                <exclude>**/Dto/**</exclude>
-                                <exclude>**/Model/**</exclude>
-                                <exclude>**/Exception/**</exclude>
-                                <exclude>**/Utils/**</exclude>
-                                <exclude>**/Enums/**</exclude>
-                                <exclude>**/Mappers/**</exclude>
-                                <exclude>**/ApplicationReceipts.class</exclude>
-                                <exclude>**/Entities/**</exclude>
-                                <exclude>**/Entity/**</exclude>
-                            </excludes>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
 
-            <!-- Surefire Configuration - MUST COME AFTER JACOCO -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
                 <configuration>
-                    <argLine>@{argLine} ${argLine}</argLine>
+                    <argLine>@{jacocoArgLine} ${bytebuddy.experimental.arg}</argLine>
                     <useModulePath>false</useModulePath>
                     <includes>
                         <include>**/*Test.java</include>

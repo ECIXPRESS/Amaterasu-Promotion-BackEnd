@@ -2,6 +2,7 @@ package ECIEXPRESS.Amaterasu_Pagos.Promotion._BackEnd.Amaterasu_Pagos.Promotion.
 
 import ECIEXPRESS.Amaterasu_Pagos.Promotion._BackEnd.Amaterasu_Pagos.Promotion._BackEnd.Domain.Model.Promotion;
 import ECIEXPRESS.Amaterasu_Pagos.Promotion._BackEnd.Amaterasu_Pagos.Promotion._BackEnd.Infrastructure.Persistence.Dto.RepositoryResponses.PromotionRepositoryResponse;
+import ECIEXPRESS.Amaterasu_Pagos.Promotion._BackEnd.Amaterasu_Pagos.Promotion._BackEnd.Infrastructure.Web.Dto.PromotionResponses.ApplyPromotionResponse;
 import ECIEXPRESS.Amaterasu_Pagos.Promotion._BackEnd.Amaterasu_Pagos.Promotion._BackEnd.Infrastructure.Web.Dto.PromotionResponses.GetPromotionResponse;
 import ECIEXPRESS.Amaterasu_Pagos.Promotion._BackEnd.Amaterasu_Pagos.Promotion._BackEnd.Infrastructure.Web.Dto.PromotionResponses.UpdatePromotionResponse;
 
@@ -17,6 +18,9 @@ public class PromotionMapper {
         );
     }
     public static Promotion repositoryResponseToPromotion(PromotionRepositoryResponse response){
+       if(response == null){
+           return null;
+       }
         return new Promotion(
                 response.promotionDocument().getPromotionId(),
                 response.promotionDocument().getProductId(),
@@ -35,4 +39,5 @@ public class PromotionMapper {
                 response.promotionDocument().getPromotionMultiplier()
         );
     }
+
 }
