@@ -11,10 +11,10 @@
         <relativePath/>
     </parent>
 
-    <groupId>ECIEXPRESS.Amaterasu-Pagos.Promotion-BackEnd</groupId>
-    <artifactId>Amaterasu-Pagos-Promotion-BackEnd</artifactId>
+    <groupId>ECIEXPRESS.Amaterasu-Promotion-BackEnd</groupId>
+    <artifactId>Amaterasu-Promotion-BackEnd</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Amaterasu-Pagos-Promotion-BackEnd</name>
+    <name>Amaterasu-Promotion-BackEnd</name>
     <description>Microservicio para gestionar las promociones y descuentos de los usuarios en ECIEXPRESS</description>
 
     <properties>
@@ -32,8 +32,8 @@
 
         <!-- Sonar -->
         <sonar.organization>ecixpress</sonar.organization>
-        <sonar.projectKey>ECIXPRESS_Amaterasu-Pagos-Promotion-BackEnd</sonar.projectKey>
-        <sonar.projectName>Amaterasu-Pagos-Promotion-BackEnd</sonar.projectName>
+        <sonar.projectKey>ECIXPRESS_Amaterasu-Promotion-BackEnd</sonar.projectKey>
+        <sonar.projectName>Amaterasu-Promotion-BackEnd</sonar.projectName>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
         <sonar.coverage.exclusions>
