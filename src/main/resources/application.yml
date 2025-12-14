@@ -36,11 +36,11 @@ springdoc:
 
 
 gateway:
-  url: http://gateway:8081/api
+  url: http://gateway:8081
 
 microservices:
   order:
-    base-path: /orders
+    base-path: /api/orders
 
 resilience4j:
   circuitbreaker:
