@@ -22,7 +22,7 @@ public class OrderProviderAdapter implements OrderProvider {
 
     private final RestTemplate restTemplate;
 
-    @Value("${microservices.order.url}")
+    @Value("${gateway.url:http://gateway:8081/api}")
     private String baseUrl;
 
     @Value("${microservices.order.base-path}")

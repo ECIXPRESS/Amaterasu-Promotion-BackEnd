@@ -34,14 +34,13 @@ springdoc:
     version: 1.0.0
     description: API para gestión de promociones en ECIEXPRESS
 
+
+gateway:
+  url: http://gateway:8081/api
+
 microservices:
   order:
-    url: http://localhost:8089
-    base-path: /api/orders
-    timeout: 5000
-    retry:
-      max-attempts: 3
-      backoff-delay: 1000
+    base-path: /orders
 
 resilience4j:
   circuitbreaker:
