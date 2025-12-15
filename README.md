@@ -710,7 +710,7 @@ Esta sección muestra los diagramas clave del microservicio de promociones, ilus
 ### 🔍 Diagrama de Componentes — Vista Específica
 
 <div align="center">
-<img src="docs/images/ComponentesPromociones.png" alt="Diagrama de Componentes Específico" width="600"/>
+<img src="docs/images/componentesPromociones.png" alt="Diagrama de Componentes Específico" width="600"/>
 </div>
 
 **Arquitectura Hexagonal:**  
