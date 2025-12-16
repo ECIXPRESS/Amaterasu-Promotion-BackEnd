@@ -1,5 +1,5 @@
 server:
-  port: 8084
+  port: 8089
 
 spring:
   application:
@@ -34,14 +34,13 @@ springdoc:
     version: 1.0.0
     description: API para gestión de promociones en ECIEXPRESS
 
+
+gateway:
+  url: http://gateway:8081
+
 microservices:
   order:
-    url: http://localhost:8089
     base-path: /api/orders
-    timeout: 5000
-    retry:
-      max-attempts: 3
-      backoff-delay: 1000
 
 resilience4j:
   circuitbreaker:
