@@ -11,25 +11,11 @@
         <relativePath/>
     </parent>
 
-    <groupId>ECIEXPRESS.Amaterasu-Pagos.Promotion-BackEnd</groupId>
-    <artifactId>Amaterasu-Pagos-Promotion-BackEnd</artifactId>
+    <groupId>ECIEXPRESS.Amaterasu-Promotion-BackEnd</groupId>
+    <artifactId>Amaterasu-Promotion-BackEnd</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Amaterasu-Pagos-Promotion-BackEnd</name>
+    <name>Amaterasu-Promotion-BackEnd</name>
     <description>Microservicio para gestionar las promociones y descuentos de los usuarios en ECIEXPRESS</description>
-
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
 
     <properties>
         <java.version>17</java.version>
@@ -37,29 +23,31 @@
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.release>17</maven.compiler.release>
 
-        <!-- SonarCloud -->
+        <!-- JaCoCo -->
+        <jacoco.version>0.8.13</jacoco.version>
+        <!-- Defínela para que el IDE NO se queje (puede ir vacía) -->
+        <jacocoArgLine/>
+        <!-- Flags extra para forks (ByteBuddy/Mockito) -->
+        <bytebuddy.experimental.arg>-Dnet.bytebuddy.experimental=true</bytebuddy.experimental.arg>
+
+        <!-- Sonar -->
         <sonar.organization>ecixpress</sonar.organization>
         <sonar.projectKey>ECIXPRESS_Amaterasu-Promotion-BackEnd</sonar.projectKey>
         <sonar.projectName>Amaterasu-Promotion-BackEnd</sonar.projectName>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-
-        <!-- Archivos que NO quieres que entren a cobertura -->
         <sonar.coverage.exclusions>
-            **/config/**,
+            lombok.*,
             **/Config/**,
-            **/configuration/**,
             **/Dto/**,
             **/Model/**,
             **/Entity/**,
             **/Entities/**,
             **/Exception/**,
-            **/Exceptions/**,
             **/*Application.java,
-            **/*ApplicationPromotions.java,
-            **/*Configuration.java,
-            **/*Config.java,
-            **/OpenApiConfig.java
+            **/Utils/**,
+            **/Enums/**,
+            **/Mappers/**
         </sonar.coverage.exclusions>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.exclusions>
@@ -81,7 +69,6 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- Spring Boot Starters -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -92,39 +79,34 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
-        <!-- WebClient para llamar a otros microservicios -->
+        <!-- Si planeas usar WebClient -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
 
-        <!-- MongoDB -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
 
-        <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
 
-        <!-- Swagger / OpenAPI -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.8.13</version>
         </dependency>
 
-        <!-- Logging -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
         </dependency>
 
-        <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -138,29 +120,22 @@
         </dependency>
 
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- MockWebServer para mockear llamadas HTTP en tests -->
-        <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>mockwebserver</artifactId>
             <version>4.12.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+            <version>1.15.8</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <!-- Compilador -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -179,7 +154,6 @@
                 </configuration>
             </plugin>
 
-            <!-- Spring Boot -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -193,89 +167,63 @@
                 </configuration>
             </plugin>
 
-            <!-- Tests (JUnit 5) -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.2.5</version>
-                <configuration>
-                    <useModulePath>false</useModulePath>
-                </configuration>
-            </plugin>
-
-            <!-- Jacoco -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.11</version>
+                <version>${jacoco.version}</version>
+
+                <!-- Si quieres que tus excludes sí apliquen de forma consistente, ponlos a nivel plugin -->
+                <configuration>
+                    <excludes>
+                        <exclude>lombok.*</exclude>
+                        <exclude>**/Config/**</exclude>
+                        <exclude>**/Dto/**</exclude>
+                        <exclude>**/Model/**</exclude>
+                        <exclude>**/Exception/**</exclude>
+                        <exclude>**/Utils/**</exclude>
+                        <exclude>**/Enums/**</exclude>
+                        <exclude>**/Mappers/**</exclude>
+                        <exclude>**/*Application*.class</exclude>
+                        <exclude>**/Entities/**</exclude>
+                        <exclude>**/Entity/**</exclude>
+                    </excludes>
+                </configuration>
+
                 <executions>
                     <execution>
+                        <id>prepare-agent</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
-                    </execution>
-
-                    <execution>
-                        <id>report</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
                         <configuration>
-                            <excludes>
-                                <exclude>**/config/**</exclude>
-                                <exclude>**/Config/**</exclude>
-                                <exclude>**/configuration/**</exclude>
-                                <exclude>**/Dto/**</exclude>
-                                <exclude>**/Model/**</exclude>
-                                <exclude>**/entity/**</exclude>
-                                <exclude>**/entities/**</exclude>
-                                <exclude>**/Exception/**</exclude>
-                                <exclude>**/Exceptions/**</exclude>
-                                <exclude>**/*Application.class</exclude>
-                                <exclude>**/*ApplicationPromotions.class</exclude>
-                                <exclude>**/*Configuration.class</exclude>
-                                <exclude>**/*Config.class</exclude>
-                                <exclude>**/*$Builder.class</exclude>
-                            </excludes>
+                            <!-- Clave del fix -->
+                            <propertyName>jacocoArgLine</propertyName>
                         </configuration>
                     </execution>
 
                     <execution>
+                        <id>report</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+
+                    <execution>
                         <id>jacoco-check</id>
+                        <phase>verify</phase>
                         <goals>
                             <goal>check</goal>
                         </goals>
                         <configuration>
-                            <excludes>
-                                <exclude>**/config/**</exclude>
-                                <exclude>**/Config/**</exclude>
-                                <exclude>**/configuration/**</exclude>
-                                <exclude>**/Dto/**</exclude>
-                                <exclude>**/Model/**</exclude>
-                                <exclude>**/entity/**</exclude>
-                                <exclude>**/entities/**</exclude>
-                                <exclude>**/Exception/**</exclude>
-                                <exclude>**/Exceptions/**</exclude>
-                                <exclude>**/*Application.class</exclude>
-                                <exclude>**/*ApplicationPromotions.class</exclude>
-                                <exclude>**/*Configuration.class</exclude>
-                                <exclude>**/*Config.class</exclude>
-                                <exclude>**/*$Builder.class</exclude>
-                            </excludes>
                             <rules>
                                 <rule>
-                                    <element>BUNDLE</element>
+                                    <element>PACKAGE</element>
                                     <limits>
                                         <limit>
-                                            <counter>LINE</counter>
+                                            <counter>INSTRUCTION</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.00</minimum>
-                                        </limit>
-                                        <limit>
-                                            <counter>CLASS</counter>
-                                            <value>COVEREDRATIO</value>
-                                            <minimum>0.00</minimum>
+                                            <minimum>0.8</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
@@ -285,7 +233,20 @@
                 </executions>
             </plugin>
 
-            <!-- Sonar Maven Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <argLine>@{jacocoArgLine} ${bytebuddy.experimental.arg}</argLine>
+                    <useModulePath>false</useModulePath>
+                    <includes>
+                        <include>**/*Test.java</include>
+                        <include>**/*Tests.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>

@@ -35,7 +35,7 @@ public class OpenApiConfig {
                                 + "asociadas a productos, pedidos o usuarios."))
                 .servers(List.of(
                         new Server()
-                                .url("http://localhost:8080")
+                                .url("http://localhost:8084")
                                 .description("Servidor de Desarrollo Local")
                 ));
     }
